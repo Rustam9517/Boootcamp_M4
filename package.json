@@ -1,0 +1,31 @@
+{
+  "name": "bootcamp",
+  "version": "1.0.0",
+  "description": "Doing smth",
+  "main": "Scripts/index.js",
+  "scripts": {
+    "start": "node Scripts/index.js",
+    "prettier:fix": "prettier \"index.js\" --write",
+    "build": "webpack",
+    "build:prod": "webpack --config webpack.prod.config.js"
+  },
+  "author": "Rustam",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.8.23"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.1",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
+    "prettier": "^2.0.4",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
