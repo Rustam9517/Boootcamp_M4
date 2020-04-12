@@ -18,7 +18,7 @@ let second;
 let rate;
 let current;
 let currentSecond;
-
+//Функция берет значения левой выбранной валюты и считает его правое поле ввода
 function inputOnclick(e){
     e.preventDefault();
     currenciesValuesFirst.forEach(el =>{
@@ -32,6 +32,8 @@ function inputOnclick(e){
     checkValue();
     countFirst();
 }
+
+//Функция берет значение правой выбранной валюты и меняет его относительно левого поля
 function inputOnclickSecond (e){
     e.preventDefault();
     currenciesValuesSecond.forEach(el =>{
@@ -45,6 +47,8 @@ function inputOnclickSecond (e){
     checkValue();
     countFirst();
 }
+
+//Выбор дополнительных валют из списка и пересчет в правое поле ввода
 const selectOnChange = ()=> {
     selectBlockFirst.classList.add('active');
     selectValuesFirst.forEach(el => {
@@ -56,6 +60,8 @@ const selectOnChange = ()=> {
     checkValue();
     countFirst();
 };
+
+//Выбор дополнительных валют из списка и пересчет в левое поле ввода относительно левого поля
 const selectOnChangeSecond = ()=> {
     selectBlockSecond.classList.add('active');
     selectValuesSecond.forEach(el => {
@@ -67,6 +73,8 @@ const selectOnChangeSecond = ()=> {
     checkValue();
     countFirst();
 };
+
+// Проверяет выбранные валюты и берет их значение
 function checkValue() {
     currenciesValuesFirst.forEach(el =>{
         if(selectBlockFirst.classList.contains('active'))first = selectBlockFirst.value;
@@ -82,6 +90,8 @@ function checkValue() {
         }
     });
 }
+
+// На основе функции checkValue() поставляет правильные валюты в запрос на сервер считает его и возвращает ответ в нужное поле
 function fetchInfo (input) {
     let current = fetch(`https://api.ratesapi.io/api/latest?base=${first}&symbols=${second}`);
     if(isPending===true) loading.style.display='flex';
@@ -106,16 +116,22 @@ function fetchInfo (input) {
                 );
         });
 }
+
+// Функция для обработки ввода берет введеное значение и пересчитывает его правильно
 function countFirstCurrency(e){
     checkValue();
     secondCurrency.value=e.target.value;
     countFirst();
 }
+
+// Функция для обработки ввода берет введеное значение и пересчитывает его правильно
 function countSecondCurrency(e){
     checkValue();
     firstCurrency.value=e.target.value;
     countSecond();
 }
+
+//Функция пересчитывающая валюту по клику на меню валют правого блока
 function countFirst(){
     checkValue();
     if(first===second){
@@ -130,6 +146,8 @@ function countFirst(){
         }
     }
 }
+
+//Функция пересчитывающая валюту по клику на меню валют левого блока
 function countSecond(){
     checkValue();
     if(first===second){
@@ -145,57 +163,68 @@ function countSecond(){
         }
     }
 }
+
+//Функция меняющая местами значение валют и пересчитывающая его
 function changePlace (e){
     e.preventDefault();
-    currenciesValuesFirst.forEach((el) =>{
-       if(el.classList.contains('active')){
-            current=el.value;
-        }
-       if(selectBlockFirst.classList.contains('active')){
-           current = '';
-       }
-    });
-    currenciesValuesSecond.forEach(second =>{
-        if(second.classList.contains('active')){
-            currentSecond= second.value;
-        }
-        if(selectBlockSecond.classList.contains('active')){
-            currentSecond = '';
-        }
-    });
-    currenciesValuesFirst.forEach(el=>{
-        el.classList.remove('active');
-        if(selectBlockSecond.classList.contains('active') && currentSecond === ''){
-            selectBlockFirst.value = selectBlockSecond.value;
-            selectBlockFirst.classList.add('active');
-            selectBlockSecond.classList.remove('active');
-            selectValuesFirst.forEach(el => {
-                el.style.backgroundColor = 'white';
-            });
-        }
-        if(el.value===currentSecond){
-           el.classList.add('active');
-        }
-    });
-    currenciesValuesSecond.forEach(el=>{
-        el.classList.remove('active');
+    if(selectBlockFirst.classList.contains('active') && selectBlockSecond.classList.contains('active')){
+        let temp;
+        temp = selectBlockSecond.value;
+        selectBlockSecond.value = selectBlockFirst.value;
+        selectBlockFirst.value = temp;
+    }
+    else {
+        currenciesValuesFirst.forEach((el) =>{
+            if(el.classList.contains('active')){
+                current=el.value;
+            }
+            if(selectBlockFirst.classList.contains('active')){
+                current = '';
+            }
+        });
+        currenciesValuesSecond.forEach(second =>{
+            if(second.classList.contains('active')){
+                currentSecond= second.value;
+            }
+            if(selectBlockSecond.classList.contains('active')){
+                currentSecond = '';
+            }
+        });
+        currenciesValuesFirst.forEach(el=>{
+            el.classList.remove('active');
+            if(selectBlockSecond.classList.contains('active') && currentSecond === ''){
+                selectBlockFirst.value = selectBlockSecond.value;
+                selectBlockFirst.classList.add('active');
+                selectBlockSecond.classList.remove('active');
+                selectValuesFirst.forEach(el => {
+                    el.style.backgroundColor = 'white';
+                });
+            }
+            if(el.value===currentSecond){
+                el.classList.add('active');
+            }
+        });
+        currenciesValuesSecond.forEach(el=>{
+            el.classList.remove('active');
+            if(selectBlockFirst.classList.contains('active') && current === ''){
+                selectBlockSecond.value = selectBlockFirst.value;
+                selectBlockSecond.classList.add('active');
+                selectBlockFirst.classList.remove('active');
+                selectValuesSecond.forEach(el => {
+                    el.style.backgroundColor = 'white';
+                });
+            }
+            if(el.value===current){
+                el.classList.add('active');
+            }
 
-        if(selectBlockFirst.classList.contains('active') && current === ''){
-            selectBlockSecond.value = selectBlockFirst.value;
-            selectBlockSecond.classList.add('active');
-            selectBlockFirst.classList.remove('active');
-            selectValuesSecond.forEach(el => {
-                el.style.backgroundColor = 'white';
-            });
-        }
-         if(el.value===current){
-           el.classList.add('active');
-         }
+        });
+    }
 
-    });
     checkValue();
     countFirst();
 }
+
 
 
 changeButton.addEventListener('click',changePlace);
