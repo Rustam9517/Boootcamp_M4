@@ -38,5 +38,4 @@ module.exports = {
             filename: 'main.css',
         }),
     ],
-    watch: true
 };
